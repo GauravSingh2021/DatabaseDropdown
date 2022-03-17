@@ -1,0 +1,106 @@
+﻿@model DatabaseDropdown.Models.User
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Create User</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" asp-controller="User">
+
+                    <div class="form-group">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Country"></label>
+                        <select asp-for="Country" class="form-control">
+                        <option>Please Select Your Country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="State"></label>
+                        <select asp-for="State" class="form-control">
+                            <option>Please Select Your State</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="City"></label>
+                        <select asp-for="City" class="form-control">
+                            <option>Please Select Your City</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Submit" class="btn btn-success" />
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<script>
+
+    $(document).ready(function () {
+        loadcountries()
+
+        $("#Country").change(function () {
+            var id = $(this).val();
+            $("#State").empty();
+            $("#State").append("<option>select</option>")
+            $.get('@Url.Action("Getstates","User")', { "id": id }, function
+                (result) {
+
+                console.log(result)
+                $.each(result, function (i, data) {
+                    $("#State").append("<option value=" + data.id + ">" + data.name + "</option>")
+                })
+            })
+
+        })
+
+              $("#State").change(function () {
+            var id = $(this).val();
+            $("#City").empty();
+            $("#City").append("<option>select</option>")
+            $.get('@Url.Action("Getcities","User")', { "id": id }, function
+                (result) {
+
+                console.log(result)
+                $.each(result, function (i, data) {
+                    $("#City").append("<option value=" + data.id + ">" + data.name + "</option>")
+                })
+            })
+
+        })
+
+    })
+
+    function loadcountries() {
+        debugger;
+        $.get('@Url.Action("Getcountries", "User")', function
+            (result) {
+            console.log(result)
+            $.each(result, function (i, data) {
+                $("#Country").append("<option value=" + data.id + ">" + data.name + "</option")
+            })
+        })
+            
+    }
+
+</script>
